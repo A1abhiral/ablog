@@ -130,9 +130,15 @@
           <!-- Right side: Add Post, Add Category, Register, Login, Logout -->
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             {% if user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link text-light" href="{% url 'add_post' %}">Add Post</a>
-              </li>
+            {% if user.profile %}
+            <li class="nav-item">
+              <a class="nav-link text-light" href="{% url 'add_post' %}">Add Post</a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link text-light" href="{% url 'create_profile_page' %}">Create Profile to Add Post</a>
+            </li>
+          {% endif %}
               <li class="nav-item">
                 <a class="nav-link text-light" href="{% url 'add_category' %}">Add Category</a>
               </li>
