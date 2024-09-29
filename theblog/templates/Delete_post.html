@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-danger text-center mb-4">Delete Blog Post</h1>
+    <br>
+
+    {% if user.is_authenticated %}
+        {% if post.author.id == user.id %}
+        <div class="alert alert-warning text-center">
+            <strong>Are you sure you want to delete the post titled "{{ post.title }}"?</strong>
+            <p>This action cannot be undone.</p>
+        </div>
+        <form method="POST" class="text-center">
+            {% csrf_token %}
+            <button class="btn btn-danger">Delete</button>
+            <a href="{% url 'article-detail' post.pk %}" class="btn btn-secondary">Cancel</a>
+        </form>
+        {% else %}
+        <div class="alert alert-danger text-center">
+            <h4>You should not be here, and you know it!!!</h4>
+        </div>
+        {% endif %}
+    {% else %}
+    <div class="alert alert-danger text-center">
+        <h4>You should not be here, and you know it!!!</h4>
+    </div>
+    {% endif %}
+</div>
+{% endblock content %}

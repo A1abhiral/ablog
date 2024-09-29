@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Latest Posts</h1>
+    <ul class="list-group">
+        {% for post in object_list %}
+        <li class="list-group-item mb-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <h4>
+                        <a href="{% url 'article-detail' post.pk %}" class="text-primary">{{ post.title }}</a>
+                    </h4>
+                    <p class="mb-1">
+                        <a href="{% url 'category' post.category|slugify %}" class="badge bg-secondary text-light">
+                            {{ post.category }}
+                        </a>
+                        <span class="text-muted">by {{ post.author.username }}</span>
+                    </p>
+                </div>
+                {% if user.is_authenticated %}
+                    {% if post.author.id == user.id %}
+                    <div>
+                        <a href="{% url 'update_post' post.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        <a href="{% url 'delete_post' post.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <p class="mt-2">{{ post.snippet }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock content %}
