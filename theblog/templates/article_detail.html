@@ -1,37 +1,41 @@
 {% extends "base.html" %}
 {% load static %}
-{%block title%}{{post.title}}{%endblock title%}
+{% load cloudinary %}
+{% block title %}{{ post.title }}{% endblock title %}
 
-{%block content%}
-<h1>{{post.title}}</h1>
-<small>By: {{post.author.first_name}} {{post.author.last_name}}--{{post.post_date}}</small>
+{% block content %}
+<h1>{{ post.title }}</h1>
+<small>By: {{ post.author.first_name }} {{ post.author.last_name }} -- {{ post.post_date }}</small>
 
 {% if user.is_authenticated %} 
-{%if post.author.id == user.id %}
- <small><a href="{%url 'update_post' post.pk%}">(edit)</a></small><small><a href="{%url 'delete_post' post.pk%}">(delete)</a></small><br>
-{%endif%}
-{%endif%}
+    {% if post.author.id == user.id %}
+        <small><a href="{% url 'update_post' post.pk %}">(edit)</a></small>
+        <small><a href="{% url 'delete_post' post.pk %}">(delete)</a></small><br>
+    {% endif %}
+{% endif %}
 <hr>
-{%if post.header_image%}
-<img src={{post.header_image.url}} style="width: 300px; height: auto;">
+
+{% if post.header_image %}
+    <img src="{{ post.header_image.url }}" style="width: 300px; height: auto;">
+    <br><br>
+{% endif %}
+
+{{ post.body|safe }}
 <br><br>
-{%endif%}
-{{post.body|safe}}
-<br><br>
-<a href="{% url 'home' %}"class="btn btn-secondary">Back</a>
+<a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
 <br><br>
 <hr>
 <br>
+
 {% if user.is_authenticated %}
 <form action="{% url 'like_post' post.pk %}" method="POST">
     {% csrf_token %}
     {% if liked %}
-    <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-danger btn-sm">Unlike</button>
-    {%else%}
-
-    <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">Like</button>
+        <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-danger btn-sm">Unlike</button>
+    {% else %}
+        <button type="submit" name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">Like</button>
     {% endif %}
-    ---{{total_likes}}likes
+    ---{{ total_likes }} likes
 </form>
 {% else %}
 <div class="alert alert-info" role="alert">
@@ -40,45 +44,8 @@
 {% endif %}
 <br><br>
 <hr>
-<!--<div class="comment-section card mx-auto p-4" style="max-width: 800px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-    <h3 class="mb-4">Comments</h3>-->
-    
-    <!-- Form for submitting a comment -->
-  <!-- {% if user.is_authenticated %}
-        <form method="POST" action=" ">
-            {% csrf_token %}
-            {{form.as_p}}
-                <button type="submit" class="btn btn-primary">Submit Comment</button>
-        
-        </form>
-    {% else %}
-        <div class="alert alert-info" role="alert">
-            <strong>Notice:</strong> You need to <a href="{% url 'login' %}" class="alert-link">log in</a> to leave a comment.
-        </div>
-    {% endif %}
-    
-    <hr>-->
 
-    <!-- Display comments -->
-  <!-- {% if post.comments.all %}
-        <h4 class="mb-4">All Comments</h4>
-        <div class="comment-list">
-            {% for comment in post.comments.all %}
-                <div class="card mb-3" style="border-radius: 10px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);">
-                    <div class="card-body">
-                        <strong>{{ comment.name }}</strong> 
-                        <span class="text-muted" style="font-size: 0.9em;">- {{ comment.date_added }}</span>
-                        <p class="mt-2" style="font-size: 1.1em; line-height: 1.5;">{{ comment.body }}</p>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p class="text-muted">No comments yet. Be the first to comment!</p>
-    {% endif %}
-</div>-->
-<hr>
-<br>
+<!-- Author Profile Section -->
 <div class="card mb-3 mx-auto" style="max-width: 1000px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     <div class="row g-0 h-100">
         <!-- Profile Picture Section -->
@@ -131,8 +98,4 @@
     </div>
 </div>
 
-
-
-
-
-{%endblock content%}
+{% endblock content %}
