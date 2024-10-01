@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import dj_database_url
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
 
 from environ import Env
 env = Env()
@@ -93,7 +96,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-POSTGRES_LOCALLY = True
+POSTGRES_LOCALLY = False
 if ENVIRONMENT == 'production'or POSTGRES_LOCALLY == True:
     DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
@@ -148,6 +151,12 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': env('CLOUD_API_SECRET')
 }
 
+cloudinary.config(
+    cloud_name=env('CLOUD_NAME'),
+    api_key=env('CLOUD_API_KEY'),
+    api_secret=env('CLOUD_API_SECRET'),
+)
+
 STATICFILES_DIRS = [
     BASE_DIR / 'static',  # Path to static files directory
 ]
@@ -169,6 +178,8 @@ USERNAME_BLACKLIST = [
     'admin',
     'theboss',
 ]
+
+
 
 
 

@@ -4,6 +4,7 @@ from theblog.models import Post, Category  # Include your models
 from .forms import PostForm, UpdateForm  
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponseRedirect
+import cloudinary.uploader
 
 # Home view to list all posts
 class HomeView(ListView):
@@ -62,6 +63,18 @@ class AddPostView(CreateView):
         context["cat_menu"] = Category.objects.all()
         return context
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        
+        # Upload profile picture to Cloudinary
+        header_image = form.cleaned_data.get('header_image')  # Ensure 'profile_pic' is the correct field name
+        if header_image:
+            response = cloudinary.uploader.upload(header_image)
+            form.instance.header_image = response['secure_url']  # Store the Cloudinary URL
+            
+        return super().form_valid(form)
+
+
 # Update existing post
 class UpdatePostView(UpdateView):
     model = Post
@@ -75,6 +88,17 @@ class UpdatePostView(UpdateView):
         context = super().get_context_data(**kwargs)
         context["cat_menu"] = Category.objects.all()
         return context
+    
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        
+        # Upload profile picture to Cloudinary
+        header_image = form.cleaned_data.get('header_image')  # Ensure 'profile_pic' is the correct field name
+        if header_image:
+            response = cloudinary.uploader.upload(header_image)
+            form.instance.header_image = response['secure_url']  # Store the Cloudinary URL
+            
+        return super().form_valid(form)
 
 # Delete post
 class DeletePostView(DeleteView):

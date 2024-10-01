@@ -6,17 +6,25 @@ from django.urls import reverse_lazy
 from .forms import SignUpForm,Edit_Profile_Form,Update_Password_Form,ProfilePageForm,EditProfilePageForm
 from theblog.models import Profile,Category
 from django.views.generic import DetailView,CreateView
+import cloudinary.uploader
+
     
 
 
 class CreateProfilePageView(CreateView):
     model = Profile
     template_name = "registration/create_profile_page.html"
-    #fields = '__all__'
     form_class = ProfilePageForm
     
-    def form_valid(self,form):
+    def form_valid(self, form):
         form.instance.user = self.request.user
+        
+        # Upload profile picture to Cloudinary
+        profile_pic = form.cleaned_data.get('profile_pic')  # Ensure 'profile_pic' is the correct field name
+        if profile_pic:
+            response = cloudinary.uploader.upload(profile_pic)
+            form.instance.profile_pic = response['secure_url']  # Store the Cloudinary URL
+            
         return super().form_valid(form)
 
 
@@ -27,8 +35,15 @@ class EditProfilePageView(generic.UpdateView):
     form_class = EditProfilePageForm
     success_url = reverse_lazy('home')
 
-    def form_valid(self,form):
+    def form_valid(self, form):
         form.instance.user = self.request.user
+        
+        # Upload profile picture to Cloudinary
+        profile_pic = form.cleaned_data.get('profile_pic')  # Ensure 'profile_pic' is the correct field name
+        if profile_pic:
+            response = cloudinary.uploader.upload(profile_pic)
+            form.instance.profile_pic = response['secure_url']  # Store the Cloudinary URL
+            
         return super().form_valid(form)
 
 

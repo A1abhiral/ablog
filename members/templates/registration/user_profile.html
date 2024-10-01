@@ -12,9 +12,9 @@
             <!-- Profile Picture Section -->
             <div class="col-md-4 d-flex align-items-center justify-content-center bg-light" style="padding: 20px;">
                 {% if page_user.profile_pic %}
-                    <img src="{{ page_user.profile_pic.url }}" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #007bff;">
+                    <img src="{{ page_user.profile_pic }}" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #007bff;" alt="Profile Picture">
                 {% else %}
-                    <img src="{% static 'theblog/images/user-profile-icon-vector-avatar-600nw-2247726673.webp' %}" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #007bff;">
+                    <img src="{% static 'theblog/images/user-profile-icon-vector-avatar-600nw-2247726673.webp' %}" class="rounded-circle" style="width: 200px; height: 200px; object-fit: cover; border: 4px solid #007bff;" alt="Default Profile Picture">
                 {% endif %}
             </div>
 

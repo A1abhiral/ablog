@@ -16,9 +16,11 @@
 <hr>
 
 {% if post.header_image %}
-    <img src="{{ post.header_image.url }}" style="width: 300px; height: auto;">
-    <br><br>
+
+    <img src="{{ post.header_image}}" style="width: 300px; height: auto;" alt="{{ post.title }}">
+<br> <br>
 {% endif %}
+
 
 {{ post.body|safe }}
 <br><br>
@@ -52,7 +54,7 @@
         <div class="col-md-4 d-flex align-items-center justify-content-center bg-light" style="padding: 15px;">
             {% if post.author.profile.profile_pic %}
                 <a href="{% url 'profile' post.author.profile.id %}">
-                    <img src="{{ post.author.profile.profile_pic.url }}" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #007bff;">
+                    <img src="{{ post.author.profile.profile_pic }}" class="rounded-circle" style="width: 150px; height: 150px; object-fit: cover; border: 4px solid #007bff;">
                 </a>
             {% else %}
                 <a href="{% url 'profile' post.author.profile.id %}">
