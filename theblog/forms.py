@@ -20,6 +20,7 @@ class PostForm(forms.ModelForm):
         # Dynamically fetch categories and set them as choices
         choices = Category.objects.all().values_list('name', 'name')
         self.fields['category'].widget = forms.Select(choices=choices, attrs={'class': 'form-control'})
+    
 
 
 class UpdateForm(forms.ModelForm):
@@ -31,7 +32,7 @@ class UpdateForm(forms.ModelForm):
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'body': forms.Textarea(attrs={'class': 'form-control'}),
             'snippet': forms.Textarea(attrs={'class': 'form-control'}),
-            'header_image': forms.FileInput(attrs={'class': 'form-control'}),
+            'header_image': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):

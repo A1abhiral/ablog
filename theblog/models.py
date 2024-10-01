@@ -35,7 +35,7 @@ class Profile(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=255)
-    header_image = models.ImageField(null=True,blank=True,upload_to="images/")
+    header_image = models.ImageField(upload_to='images/', blank=True, null=True) 
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.CharField(max_length=255,default="defaut category")
     #body = RichTextField(blank=True,null=True)

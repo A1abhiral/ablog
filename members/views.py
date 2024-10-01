@@ -37,13 +37,29 @@ class EditProfilePageView(generic.UpdateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        
-        # Upload profile picture to Cloudinary
-        profile_pic = form.cleaned_data.get('profile_pic')  # Ensure 'profile_pic' is the correct field name
-        if profile_pic:
-            response = cloudinary.uploader.upload(profile_pic)
-            form.instance.profile_pic = response['secure_url']  # Store the Cloudinary URL
-            
+
+        # Get the current profile picture URL before trying to upload a new one
+        current_profile_pic = self.object.profile_pic
+
+        # Check if a new profile picture has been uploaded
+        profile_pic = form.cleaned_data.get('profile_pic')
+
+        if profile_pic:  # Only upload if a new image is provided
+            try:
+                # Upload the new profile picture to Cloudinary
+                response = cloudinary.uploader.upload(profile_pic)
+                # Update the form instance with the new Cloudinary URL
+                form.instance.profile_pic = response['secure_url']
+            except cloudinary.exceptions.Error as e:
+                form.add_error('profile_pic', f'Upload failed: {str(e)}')
+                return self.form_invalid(form)
+            except Exception as e:
+                form.add_error('profile_pic', 'You must re-upload previous image or upload a new image to update.')
+                return self.form_invalid(form)
+        else:
+            # If no new profile picture was uploaded, retain the current image
+            form.instance.profile_pic = current_profile_pic
+
         return super().form_valid(form)
 
 

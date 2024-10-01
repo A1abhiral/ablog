@@ -1,29 +1,37 @@
 {% extends "base.html" %}
-{%block content%}
+{% block content %}
 <h1>Update Blog Post....</h1>
 <br>
-{%if user.is_authenticated%}
-{%if post.author.id == user.id %}
-<div class="mb-3">
-  <form method="POST" enctype="multipart/form-data">
-      {% csrf_token %}
-      {{form.media}}
-      {{form.as_p}}
-      <button  class="btn btn-secondary">Update</button>
-    
-  </div>
-  {%else%}
-  <h4>you should not be here and you know it !!!!</h4>
-  
-  {%endif%}
-  {%else%}
-  <h4>you should not be here and you know it !!!!</h4>
-  
-  {%endif%}
+{% if user.is_authenticated %}
+    {% if post.author.id == user.id %}
+        <div class="mb-3">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p }}
 
+                <!-- Display form errors here -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
 
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
 
-
-
-
-{%endblock content%}
+                <button class="btn btn-secondary">Update</button>
+            </form>
+        </div>
+    {% else %}
+        <h4>You should not be here and you know it !!!!</h4>
+    {% endif %}
+{% else %}
+    <h4>You should not be here and you know it !!!!</h4>
+{% endif %}
+{% endblock %}
